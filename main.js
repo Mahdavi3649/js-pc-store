@@ -23,8 +23,8 @@ const products = [
     new Product('Walking desk', 'Get fit with the best walking desk', 649.99, 'Office equipment', './assets/img/desk.webp'),
     
 ]
-console.log(products);
-
+//console.log(products);
+ 
 
 function generateProduct(product){
     return `
@@ -37,10 +37,67 @@ function generateProduct(product){
     <div class="price">
     ${product.price}
     </div>
+    <button class="btn btn-dark buy-now" data-product-name="${product.name}" data-product-price="${product.price}">Buy Now</button>
 </div>`
 
 }
 
-function generateProductsCard(){
 
+/**
+ * Generate Products cards inside the dom element
+ * @param {array} products_array A list of products
+ * @param {object} dom_element a dom element
+ * @return void
+ */
+
+function generateProductsCard(products_array, dom_element){
+
+    products_array.forEach(product  => {
+        const markup = generateProduct(product)
+        dom_element.insertAdjacentHTML('beforeend', markup)
+    }); 
 }
+
+const productsElement = document.querySelector('.products')
+generateProductsCard(products, productsElement)
+
+const cart = []
+document.querySelectorAll('.buy-now').forEach(element => {
+
+ element.addEventListener("click", function(){
+
+    //console.log(this);
+
+    const name = this.getAttribute('data-product-name')
+    const price = parseFloat(this.getAttribute('data-product-price'))
+    //console.log(name, price);
+
+
+    const purchased_product = {
+        name, price
+      }
+      cart.push(purchased_product)
+      console.log(cart);
+ 
+      
+    // show cart items inside the cart dom element
+    document.querySelector('.cart').insertAdjacentHTML('beforeend', `<li>${purchased_product.name} €${purchased_product.price
+    } </li>`)
+
+    // loop over the cart items
+    let sum = 0
+    cart.forEach(element => {
+        // sum all prices
+        sum += element.price
+    })
+    console.log(sum);
+    // show cart total 
+    document.querySelector('.total').innerHTML = `Total: € ${sum.toFixed(2)}`
+
+    })
+
+});
+
+
+
+
